@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wrestling Game</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+    .container { background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; }
+    button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+    .log { background: #eee; padding: 10px; margin-top: 20px; white-space: pre-line; border-radius: 6px; min-height: 120px; }
+    #animation { margin-top: 20px; text-align: center; }
+    .move { font-size: 18px; padding: 10px; margin: 5px; display: inline-block; opacity: 0; transform: translateY(-20px); animation: slideIn 0.6s forwards; }
+    .player { color: green; }
+    .opponent { color: red; }
+    .lunge-wrapper { margin-bottom: 10px; animation: fadeOut 1.8s ease-out forwards; }
+    .lunge { max-width: 200px; height: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Wrestling Match</h2>
+  <div id="controls">
+    <button onclick="makeMove('power')">Power</button>
+    <button onclick="makeMove('agility')">Agility</button>
+    <button onclick="makeMove('chain')">Chain</button>
+  </div>
+  <div id="animation"></div>
+  <div class="log" id="log"></div>
+  <button onclick="resetGame()">Reset Game</button>
+</div>
+
+<script>
+  let playerScore = 0;
+  let oppScore = 0;
+  let actionsUsed = 0;
+  const logEl = document.getElementById('log');
+  const animationEl = document.getElementById('animation');
+
+  const moves = ["power", "agility", "chain"];
+  const messages = ["Ready? Wrestle! (*Blow Whistle*)"];
+  updateLog();
+
+  function makeMove(playerMove) {
+    if (actionsUsed >= 5) return;
+
+    const oppMove = moves[Math.floor(Math.random() * 3)];
+    const roundMsgs = [];
+
+    roundMsgs.push(`You used ${playerMove.charAt(0).toUpperCase() + playerMove.slice(1)}`);
+    showAnimation(playerMove, oppMove);
+
+    if (
+      (playerMove === "power" && oppMove === "agility") ||
+      (playerMove === "agility" && oppMove === "power") ||
+      (playerMove === "chain" && oppMove === "agility")
+    ) {
+      roundMsgs.push("Your opponent down blocked and hit a Go Behind");
+      oppScore++;
+    } else if (
+      (playerMove === "power" && oppMove === "chain") ||
+      (playerMove === "agility" && oppMove === "agility") ||
+      (playerMove === "chain" && oppMove === "chain")
+    ) {
+      roundMsgs.push("You Powered through your opponent's defenses");
+      playerScore++;
+    } else {
+      roundMsgs.push("Your attack was blocked!");
+    }
+
+    actionsUsed++;
+    roundMsgs.push(`You used a lot of energy! ${actionsUsed} of 5`);
+    messages.push(...roundMsgs);
+
+    if (actionsUsed >= 5) {
+      if (playerScore > oppScore) {
+        messages.push(`You win! Final Score: ${playerScore} - ${oppScore}`);
+      } else if (playerScore < oppScore) {
+        messages.push(`You lose! Final Score: ${playerScore} - ${oppScore}`);
+      } else {
+        messages.push(`It's a tie! Final Score: ${playerScore} - ${oppScore}`);
+      }
+      messages.push("Game Over.");
+    }
+
+    updateLog();
+  }
+
+  function updateLog() {
+    logEl.textContent = messages.join('\n');
+  }
+
+  function resetGame() {
+    playerScore = 0;
+    oppScore = 0;
+    actionsUsed = 0;
+    messages.length = 0;
+    messages.push("Ready? Wrestle! (*Blow Whistle*)");
+    updateLog();
+    animationEl.innerHTML = "";
+  }
+
+  function showAnimation(playerMove, oppMove) {
+    animationEl.innerHTML = `
+      <div class="lunge-wrapper">
+        <img src="https://media.giphy.com/media/J39zXOSAm7WXviUMQz/giphy.gif" alt="Wrestler Lunging" class="lunge">
+      </div>
+      <div class="move player">You used ${playerMove}</div>
+      <div class="move opponent">Opponent used ${oppMove}</div>
+    `;
+  }
+</script>
+</body>
+</html>
