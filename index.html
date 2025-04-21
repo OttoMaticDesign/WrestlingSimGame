@@ -65,12 +65,16 @@
     ) {
       roundMsgs.push("Your opponent down blocked and hit a Go Behind");
       oppScore++;
+      oppScore++;
+      oppScore++;
     } else if (
       (playerMove === "power" && oppMove === "chain") ||
       (playerMove === "agility" && oppMove === "agility") ||
       (playerMove === "chain" && oppMove === "chain")
     ) {
       roundMsgs.push("You Powered through your opponent's defenses");
+      playerScore++;
+      playerScore++;
       playerScore++;
     } else {
       roundMsgs.push("Your attack was blocked!");
