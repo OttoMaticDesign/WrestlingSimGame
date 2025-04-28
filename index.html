@@ -28,6 +28,7 @@
 <body>
 <div class="container">
   <h2>Wrestling Match</h2>
+  <h3>Ready? Wrestle!</h3>
   <div id="controls">
     <button onclick="makeMove('power')">Power</button>
     <button onclick="makeMove('agility')">Agility</button>
@@ -98,9 +99,9 @@
     updateLog();
   }
 
-  function updateLog() {
-    logEl.textContent = messages.join('\n');
-  }
+  //function updateLog() {
+  //  logEl.textContent = messages.join('\n');
+  //}
 
   function resetGame() {
     playerScore = 0;
